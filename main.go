@@ -1,11 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // declare the entry point
 func main() {
 	conferenceName := "Go Conference"
 	const conferenceTickets int = 50
+	// uint cannot be negative
 	var remainingTickets uint = 50
 	// Slice is created without a fixed size
 	bookings := []string{}
@@ -36,12 +40,42 @@ func main() {
 		fmt.Println("Enter number of tickets:")
 		fmt.Scan(&userTickets)
 
-		remainingTickets = remainingTickets - userTickets
-		bookings = append(bookings, firstName+" "+lastName)
+		isValidName := len(firstName) >= 2 && len(lastName) >= 2
+		isValidEmail := strings.Contains(email, "@")
+		isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
 
-		fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
-		fmt.Printf("%v tickets remaining for the %v\n", remainingTickets, conferenceName)
+		if isValidName && isValidEmail && isValidTicketNumber {
+			remainingTickets = remainingTickets - userTickets
+			bookings = append(bookings, firstName+" "+lastName)
 
-		fmt.Printf("These are all our bookings: %v\n", bookings)
+			fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
+			fmt.Printf("%v tickets remaining for the %v\n", remainingTickets, conferenceName)
+
+			firstNames := []string{}
+			// For slices and arrays, ranges provides the index and value for each element
+			// For loop use an _ as a blank identifier or variable not used
+			for _, booking := range bookings {
+				// Fields splits the string with white space
+				names := strings.Fields(booking)
+				firstNames = append(firstNames, names[0])
+			}
+			fmt.Printf("The first name of each attendee: %v\n", firstNames)
+
+			if remainingTickets == 0 {
+				fmt.Println("Our conference is booked. Come back next year.")
+				// Terminates the for loop
+				break
+			}
+		} else {
+			if !isValidName {
+				fmt.Println("Your first or last name is too short.")
+			}
+			if !isValidEmail {
+				fmt.Println("Enter a valid email address.")
+			}
+			if !isValidTicketNumber {
+				fmt.Println("Number of tickets you entered is invalid.")
+			}
+		}
 	}
 }
