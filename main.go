@@ -6,6 +6,7 @@ import (
 )
 
 // Clone repo
+// Another test
 // Package level variables
 // Allows variables to be available to all functions
 // Requires var syntax
