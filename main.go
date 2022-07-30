@@ -2,12 +2,9 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/koller-m/booking-app/helper"
 )
-
-// Test repo config
 
 // Package level variables
 // Allows variables to be available to all functions
@@ -21,7 +18,16 @@ var remainingTickets uint = 50
 
 // Slice is created without a fixed size
 // List of maps will grow dynamically
-var bookings = make([]map[string]string, 0)
+var bookings = make([]UserData, 0)
+
+// Creates new type
+// Similar to a class but without inheritance
+type UserData struct {
+	firstName       string
+	lastName        string
+	email           string
+	numberOfTickets uint
+}
 
 // declare the entry point
 func main() {
@@ -70,7 +76,7 @@ func getFirstNames() []string {
 	// For slices and arrays, ranges provides the index and value for each element
 	// For loop use an _ as a blank identifier or variable not used
 	for _, booking := range bookings {
-		firstNames = append(firstNames, booking["firstName"])
+		firstNames = append(firstNames, booking.firstName)
 	}
 	return firstNames
 }
@@ -101,16 +107,12 @@ func getUserInput() (string, string, string, uint) {
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
 
-	// Create an empty map
-	var userData = make(map[string]string)
-	// Key names can be called anything
-	userData["firstName"] = firstName
-	userData["lastName"] = lastName
-	userData["email"] = email
-
-	// Convert uint to string
-	// 10 is for base 10
-	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+	var userData = UserData{
+		firstName:       firstName,
+		lastName:        lastName,
+		email:           email,
+		numberOfTickets: userTickets,
+	}
 
 	bookings = append(bookings, userData)
 
