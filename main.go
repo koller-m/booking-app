@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"strconv"
 
 	"github.com/koller-m/booking-app/helper"
 )
@@ -18,7 +18,8 @@ const conferenceTickets int = 50
 var remainingTickets uint = 50
 
 // Slice is created without a fixed size
-var bookings = []string{}
+// List of maps will grow dynamically
+var bookings = make([]map[string]string, 0)
 
 // declare the entry point
 func main() {
@@ -67,9 +68,7 @@ func getFirstNames() []string {
 	// For slices and arrays, ranges provides the index and value for each element
 	// For loop use an _ as a blank identifier or variable not used
 	for _, booking := range bookings {
-		// Fields splits the string with white space
-		names := strings.Fields(booking)
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, booking["firstName"])
 	}
 	return firstNames
 }
@@ -99,7 +98,19 @@ func getUserInput() (string, string, string, uint) {
 
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
-	bookings = append(bookings, firstName+" "+lastName)
+
+	// Create an empty map
+	var userData = make(map[string]string)
+	// Key names can be called anything
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+
+	// Convert uint to string
+	// 10 is for base 10
+	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+
+	bookings = append(bookings, userData)
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for the %v\n", remainingTickets, conferenceName)
